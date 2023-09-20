@@ -1,5 +1,7 @@
-<h1>TASKS</h1>    
+{% extends "navbar.html" %}
 
+<h1>TASKS</h1>    
+{% block content %}
 {% for task in tasks %}
 
 <h1>{{task.title}}</h1>
@@ -19,3 +21,6 @@
 </button>
 
 {% endfor %}
+
+{% endblock %}
+
