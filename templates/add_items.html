@@ -1,0 +1,40 @@
+{% extends "navbar.html" %}
+
+{% block content %}
+{% load crispy_forms_tags %}
+<div class="container text-center mt-5">
+    <div class="row">
+        <div class="col">
+            <h1>Agregar Items</h1>  
+        </div>
+    </div> 
+</div> 
+
+<div class="container-sm mt-5">
+    <div class="row">
+            <div class="col-5">
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ form | crispy }}
+                    <button class="btn btn-primary">
+                        Save
+                    </button>
+                </form>
+            </div>
+            <div class="col-1"></div>
+            <div class="col-5">
+                <div class="row mt-4">
+                    <p>Vas a poder modificar los campos de cada Item que se guardó anteriormente en el Inventario.</p>
+                </div>
+                <div class="row mt-4">
+                    <p>Modifica los campos con criterio, no estamos agregando cantidades, sino que estamos dando un nuevo valor.</p>
+                </div>
+                <div class="row mt-4">
+                    <p>Los datos ingresados y las modificaciones quedaran guardadas con tu nombre de usuario y con la hora que se realizo este cambio.</p>
+                </div>
+            </div>
+
+    </div>
+</div>
+
+{% endblock %}

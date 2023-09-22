@@ -27,19 +27,16 @@
                 <a class="nav-link active" aria-current="page" href="{% url 'about' %}">About</a>
               </li>
               <li class="nav-item me-3">
-                <a class="nav-link active" aria-current="page" href="{% url 'projects' %}">Projects</a>
+                <a class="nav-link active" aria-current="page" href="{% url 'new_item' %}">Nuevo item</a>
               </li>
               <li class="nav-item me-3">
-                <a class="nav-link active" aria-current="page" href="{% url 'task' %}">Tasks</a>
+                <a class="nav-link active" aria-current="page" href="{% url 'add_items' %}">Agregar items</a>
               </li>
               <li class="nav-item me-3">
-                <a class="nav-link active" aria-current="page" href="{% url 'Create_task' %}">Create Tasks</a>
+                <a class="nav-link active" aria-current="page" href="{% url 'inventory' %}">Inventario</a>
               </li>
               <li class="nav-item me-3">
-                <a class="nav-link active" aria-current="page" href="{% url 'Create_project' %}">Create Projects</a>
-              </li>
-              <li class="nav-item me-3">
-                <a class="nav-link active" aria-current="page" href="{% url 'signout' %}">LogOut</a>
+                <a class="nav-link active" aria-current="page" href="{% url 'signout' %}">Cerrar sesión</a>
               </li>
              {% else %} 
               <li class="nav-item me-3">
@@ -49,10 +46,10 @@
                 <a class="nav-link active" aria-current="page" href="{% url 'about' %}">About</a>
               </li>
               <li class="nav-item me-3">
-                <a class="nav-link active" aria-current="page" href="{% url 'signup' %}">SigUp</a>
+                <a class="nav-link active" aria-current="page" href="{% url 'signup' %}">Registrarse</a>
               </li>
               <li class="nav-item me-3">
-                <a class="nav-link active" aria-current="page" href="{% url 'signin' %}">SigIN</a>
+                <a class="nav-link active" aria-current="page" href="{% url 'signin' %}">Iniciar sesión</a>
               </li>
              {% endif %} 
             </ul>
