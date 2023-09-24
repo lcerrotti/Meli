@@ -18,7 +18,7 @@ class InventarioForm(forms.ModelForm):
         fields = ['item', 'descripcion', 'cantidad', 'categoria']
 
     item = forms.ModelChoiceField(
-        queryset=Items.objects.all(),
+        queryset=Items.objects.exclude(inventario__isnull=False),
         empty_label=None,
         label="Item"
     )
@@ -38,4 +38,8 @@ class InventarioForm(forms.ModelForm):
     descripcion = forms.CharField(max_length=200, label="Descripción")
     cantidad = forms.IntegerField(label="Cantidad")
 
-    
+class InventarioFormWithoutItem(forms.ModelForm):
+    class Meta:
+        model = Inventario
+        # Excluye el campo "item" del formulario
+        exclude = ['item']

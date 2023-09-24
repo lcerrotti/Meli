@@ -23,9 +23,11 @@ class Task(models.Model):
 class Items(models.Model):
     item = models.CharField(max_length=200, unique=True)
     user = models.CharField(max_length=200)
+    last_item_create = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.item
+
 
 
 class Inventario(models.Model):
@@ -40,13 +42,14 @@ class Inventario(models.Model):
         ("Sin Categoria","Sin Categoria")
     )
 
-    item = models.ForeignKey(Items, on_delete=models.CASCADE)
+    item = models.OneToOneField(Items, on_delete=models.CASCADE)
     descripcion = models.CharField(max_length=200)
     cantidad = models.IntegerField()
     categoria = models.CharField(max_length=60, choices=CATEGORIAS, default="Sin Categoria")
+    ultima_mod = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.item
+        return str(self.item)
         
 
     

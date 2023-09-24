@@ -17,6 +17,7 @@
             <div class="col-5">
                 <form method="POST">
                     {% csrf_token %}
+                    {{ error }}
                     {{ form | crispy }}
                     <button class="btn btn-primary">
                         Save
