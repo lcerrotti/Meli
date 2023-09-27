@@ -1,12 +1,26 @@
 {% extends "navbar.html" %}
 
 {% block content %}
-     {{error}} 
-    <form method="POST">
+{% load crispy_forms_tags %}
+
+<div class="container text-center mt-5">
+  <div class="row">
+      <div class="col">
+          <h1>Registrarse</h1>  
+      </div>
+  </div> 
+</div>
+
+
+      
+<div class="container-sm">
+      <form method="POST">
         {% csrf_token %}
-        {{form.as_p}}
-        <button>
-            SingUp
+        {{errror}}
+        {{form|crispy}}
+        <button class="btn btn-primary">
+            Registrarse
         </button>
-    </form>
+        </form>
+    </div>
 {% endblock %}    

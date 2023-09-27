@@ -12,6 +12,7 @@ from datetime import datetime
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User 
 from django.contrib.auth import login, logout, authenticate
+import re
 
 #JSON
 
@@ -71,28 +72,49 @@ def create_project(request):
     else:
         return HttpResponse("No iniciaste sesion")
     
-    
+
+def is_valid_password(password):
+
+    if len(password) < 8:
+        return False
+
+    if not re.search(r'[a-zA-Z]', password):
+        return False
+
+    if not re.search(r'[0-9]', password):
+        return False
+
+    if password.isdigit():
+        return False
+
+    return True
+
+
 def sign_up(request):
-    if request.method == 'GET':
-         return render(request, 'signup.html',{
-            'form':UserCreationForm
-        })
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password1 = form.cleaned_data['password1']
+            password2 = form.cleaned_data['password2']
+
+            if password1 == password2:
+                if is_valid_password(password1):
+                    try:
+                        user = User.objects.create_user(username=username, password=password1)
+                        user.save()
+                        login(request, user)
+                        return redirect('home')
+                    except:
+                        return render(request, 'signup.html', {'form': form, 'error': 'El usuario ya existe'})
+                else:
+                    return render(request, 'signup.html', {'form': form, 'error': 'La contraseña no cumple con los requisitos'})
+            else:
+                return render(request, 'signup.html', {'form': form, 'error': 'Las contraseñas no coinciden'})
     else:
-        if request.POST['password1'] == request.POST['password2']:
-            try:
-                user = User.objects.create_user(username=request.POST['username'], password=request.POST['password1'])
-                user.save()
-                login(request, user)
-                return redirect(task)
-            except:
-                 return render(request, 'signup.html',{
-                    'form':UserCreationForm,
-                    'error':"El usuario ya existe"
-                    })
-        return render(request, 'signup.html',{
-                        'form':UserCreationForm,
-                        'error':"Las contraseñas no coinciden"
-                        })
+        form = UserCreationForm()
+
+    return render(request, 'signup.html', {'form': form})
     
 
 def signout(request):
