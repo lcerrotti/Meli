@@ -52,4 +52,12 @@ class Inventario(models.Model):
         return str(self.item)
         
 
-    
+class HistoricoItem(models.Model):
+
+    item = models.CharField(max_length=200)
+    modificacion = models.DateTimeField(auto_now=True)
+    cantidad = models.IntegerField()
+    user = models.CharField(max_length=200)
+
+    def __str__(self):
+        return str(self.item)

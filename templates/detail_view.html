@@ -1,19 +1,99 @@
 {% extends "navbar.html" %}
 
 {% block content %}
-
 <div class="container mt-5">
     <div class="list-group">
         <a href="#" class="list-group-item list-group-item-action" aria-current="true">
-        <div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1">{{ detail.item.item }}</h5>
-            <small>Creado en {{detail.item.last_item_create}} <small>Por: {{detail.item.user}}</small></small>
-            <small>Última modificación: {{ detail.ultima_mod }}</small>
-        </div>
-        <small class="badge bg-primary rounded-pill"> Cantidad - {{ detail.cantidad }}</small> <small class="badge bg-secondary rounded-pill"> Categoria - {{ detail.categoria }}</small>
-        <p class="mb-1 mt-3">Descripcion: {{ detail.descripcion }}</p>
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">{{ detail.item.item }}</h5>
+                <small>Creado en {{detail.item.last_item_create}} <small>Por: {{detail.item.user}}</small></small>
+                <small>Última modificación: {{ detail.ultima_mod }}</small>
+            </div>
+            <small class="badge bg-primary rounded-pill"> Cantidad - {{ detail.cantidad }}</small> <small class="badge bg-secondary rounded-pill"> Categoria - {{ detail.categoria }}</small>
+            <p class="mb-1 mt-3">Descripcion: {{ detail.descripcion }}</p>
         </a>
     </div>
 </div>
 
+
+
+
+<div class="container d-flex flex-column align-items-center justify-content-center min-vh-30">
+    <canvas id="miGrafico" width="1200" height="400"></canvas>
+
+    <div class="mt-5"> 
+        <div class="list-group overflow-auto">
+            <div style="max-height: 200px; overflow-y: auto;">
+                {% for m in modInfo %}
+                <ul class="list-group list-group-horizontal">
+                    <li class="list-group-item">{{m.item}}</li>
+                    <li class="list-group-item">{{m.modificacion}}</li>
+                    <li class="list-group-item">{{m.user}}</li>
+                </ul> 
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.0.1/dist/echarts.min.js"></script>
+
+
+
+
+
+<script>
+    var jsonData = JSON.parse('{{ data|safe }}');
+
+    // Prepara los datos para ECharts
+    var xData = jsonData.map(item => item.y);
+    var yData = jsonData.map(item => item.x);
+    console.log(jsonData);
+    var userArray = jsonData.map(item => item.user);
+    console.log(userArray);
+
+    // Inicializa el gráfico de ECharts
+    var myChart = echarts.init(document.getElementById('miGrafico'));
+
+    // Configura las opciones del gráfico
+    var option = {
+        tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+        type: 'cross'
+    },
+    formatter: function(params) {
+        var index = params[0].dataIndex;
+        var user = userArray[index]; 
+        var seriesName = params[0].seriesName; 
+        return user + params[0].name + seriesName + params[0].value;
+    }
+},
+        xAxis: {
+            type: 'category',
+            data: xData,
+            axisLabel: {
+                rotate: 45
+            }
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+                data: yData,
+                type: 'line',
+                label: {
+                    show: true,
+                    position: 'top'
+                },
+                itemStyle: {
+                    color: 'rgba(0, 114, 255, 1)'
+                }
+            }
+        ]
+    };
+
+    myChart.setOption(option);
+    </script>
 {% endblock %}

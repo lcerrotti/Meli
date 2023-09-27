@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from . models import Project, Task, Inventario, Items
+from . models import Project, Task, Inventario, Items, HistoricoItem
 from django.shortcuts import get_object_or_404, render, redirect
 from .forms import CreateNewTask, CreateNewProject, InventarioForm, ItemsForm, InventarioFormWithoutItem
 
@@ -13,6 +13,9 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User 
 from django.contrib.auth import login, logout, authenticate
 
+#JSON
+
+import json
 # Create your views here.
 
 def index(request):
@@ -137,8 +140,13 @@ def edit_item(request, item_id):
             try:
                 eitem = get_object_or_404(Inventario, pk=item_id)
                 form = InventarioFormWithoutItem(request.POST, instance=eitem)
-                form.save()
-                return redirect('inventory')
+                if form.is_valid():
+                    form.save()
+                    username = request.user.username
+                    nombre_item = str(eitem.item)
+                    historicoItem = HistoricoItem.objects.create(user=username, cantidad=request.POST['cantidad'] ,item=nombre_item)
+                    historicoItem.save()
+                    return redirect('inventory')
             except:
                 return HttpResponse("No es el item que buscabas editar inicialmente.")
     else:
@@ -236,10 +244,21 @@ def detail_view(request, item_id):
     if request.user.is_authenticated:
         if request.method == 'GET':
             eitem = get_object_or_404(Inventario, pk=item_id)
+            data = list(HistoricoItem.objects.filter(item=eitem).values('cantidad', 'modificacion', 'user', 'item'))
+            print("Datos obtenidos de la base de datos:", data)
+            formatted_data = [{'x': item['cantidad'], 'y': item['modificacion'].strftime('%Y-%m-%d %H:%M:%S'), 'user': item['user']} for item in data]
+            data_json = json.dumps(formatted_data)
+            print("Datos formateados en JSON:", data_json)
+            print("dataaaaaaaaaaaa",data)
             return render(request, 'detail_view.html',{
                 'detail':eitem,
+                'data':data_json,
+                'modInfo':data,
             })
+            
         else:
             return HttpResponse("Error")
     else:    
-        return HttpResponse("No iniciaste sesion.")
+        return HttpResponse("No iniciaste sesion.") 
+    
+
